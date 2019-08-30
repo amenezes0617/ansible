@@ -1,0 +1,15 @@
+---
+  - name: Get Java version
+    shell: java -version 2>&1 | awk -F '"' '/version/ {print $2}'
+    register: java_version_after
+    changed_when: False
+
+  - name: Print Java version
+    debug:
+      msg: "Running java version {{ java_version_after.stdout }}"
+    when: java_version_after.stdout
+
+  - name: Compare java versions before and after the update
+    debug:
+      msg: "Java versions are different"
+    when: java_version_before.stdout != java_version_after.stdout

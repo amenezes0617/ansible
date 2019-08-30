@@ -1,0 +1,12 @@
+---
+  - name: Check if notification email is setup
+    debug:
+      var: recipient_email
+
+  - name: List service var
+    debug:
+      var: ansible_local.preferences.service_info.service
+
+  - name: Email notification before patching
+    include_tasks: send_email_before.yml
+    #when: "'IANA_Servers' not in group_names"

@@ -1,0 +1,11 @@
+---
+  - name: Get services running before update (centos6)
+    shell: service --status-all | grep "is running" | awk '{print $1}'
+    register: service_status_before
+    changed_when: False
+    args:
+      warn: False
+
+  - name: List running services
+    debug:
+      msg: "{{ service_status_before.stdout }}"

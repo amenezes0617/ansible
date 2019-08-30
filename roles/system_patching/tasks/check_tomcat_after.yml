@@ -1,0 +1,16 @@
+---
+# Check if Tomcat is running
+    - name: Check if Tomcat is running
+      shell: ps aux | grep [t]omcat | wc | awk '{print$1}'
+      register: tomcat_after
+      changed_when: False
+      ignore_errors: true
+
+    - name: Tomcat running instances
+      debug:
+        msg: "There are {{ tomcat_after.stdout }} instances of Tomcat running"
+
+    - name: Compare before and after instances
+      debug:
+        msg: "Number of Tomcat instances running after the reboot is different than the number of instances running before the reboot"
+      when: tomcat_after.stdout != tomcat_before.stdout

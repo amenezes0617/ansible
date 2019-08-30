@@ -1,0 +1,16 @@
+---
+  - name: Get last kernel version
+    shell: rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1
+    register: latest_kernel
+    args:
+       warn: no
+    changed_when: False
+
+  - name: Get current kernel version
+    shell: uname -r
+    register: current_kernel
+    changed_when: False
+
+  - name: Report kernel versions
+    debug:
+       msg: "Current kernel version is {{ current_kernel.stdout }} and the latest kernel version is {{ latest_kernel.stdout }}"

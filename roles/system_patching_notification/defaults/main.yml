@@ -1,0 +1,6 @@
+---
+service: "{{ ansible_local.preferences.service_info.service if ansible_local.preferences.service_info.service is defined else
+'service-undefined' }}"
+recipient_email: "{{ 'example@example.com' if ansible_local.preferences.service_info.notification_email is not defined
+or ansible_local.preferences.service_info.notification_email == '[]' else
+ansible_local.preferences.service_info.notification_email }}"

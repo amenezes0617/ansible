@@ -1,0 +1,4 @@
+---
+  - name: Get list of updated or installed packages
+    shell: grep "`date '+%b %d'`" /var/log/yum.log
+    register: updated

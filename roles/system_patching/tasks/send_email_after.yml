@@ -1,0 +1,9 @@
+---
+  - name: Send email after patching
+    mail:
+      host: smtp.example.com
+      port: 25
+      to: "{{ recipient_email }}"
+      subject: "System updates for the service {{ service|upper }} has completed"
+      body: "{{ lookup('template', 'templates/mail_body_after.j2') }}"
+      from: example@example.com

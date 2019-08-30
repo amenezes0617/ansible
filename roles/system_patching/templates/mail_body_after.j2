@@ -1,0 +1,8 @@
+
+The monthly patching process has completed for server {{ ansible_nodename }} which provides the service {{ service|upper }}.
+
+{% if rebooted is defined %}
+The server was rebooted to apply the new patches.
+{% else %}
+A reboot was not required at this time.
+{% endif %}

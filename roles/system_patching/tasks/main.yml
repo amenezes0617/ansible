@@ -1,0 +1,58 @@
+---
+  - name: Check services running before update (centos6)
+    include_tasks: get_services_centos6.yml
+    when: ansible_distribution_major_version == '6'
+
+  - name: Check services running before update (centos7)
+    include_tasks: get_services_centos7.yml
+    when: ansible_distribution_major_version == '7'
+
+  - name: Check for Tomcat running
+    include_tasks: check_tomcat_before.yml
+
+  - name: Check for Java version
+    include_tasks: check_java_before.yml
+
+  - name: Check and update packages
+    include_tasks: yum_update.yml
+    tags: yum_update
+
+  - name: Compare and report kernel versions
+    include_tasks: kernel_baseline.yml
+
+  - name: Compare and report Java versions
+    include_tasks: check_java_after.yml
+
+  - name: Reboot if needed
+    include_tasks: reboot.yml
+    when: latest_kernel.stdout != current_kernel.stdout or
+          java_version_before.stdout != java_version_after.stdout
+  - meta: clear_host_errors
+
+  - name: Message when latest kernel is equal to current kernel
+    debug:
+      msg: "Server does not need to be rebooted, no kernel changes or no Java changes"
+    when: latest_kernel.stdout == current_kernel.stdout
+
+  - name: Post-update services check (centos6) (runs only if system updated or rebooted)
+    include_tasks: check_services_centos6.yml
+    when: (yum_output.results|length > 0 or rebooted is defined) and ansible_distribution_major_version == '6'
+
+  - name: Post-update services check (centos7) (runs only if system updated or rebooted)
+    include_tasks: check_services_centos7.yml
+    when: (yum_output.results|length > 0 or rebooted is defined) and ansible_distribution_major_version == '7'
+
+  - name: Check for Tomcat running after reboot
+    include_tasks: check_tomcat_after.yml
+    when: (yum_output.results|length > 0 or rebooted is defined) and tomcat_before.stdout > '0'
+
+  - name: Get list of updated packages
+    include_tasks: yum_log.yml
+    when: yum_output.results|length > 0
+
+  - name: Email notification after patching
+    include_tasks: send_email_after.yml
+    tags: email_after
+
+  - name: Write logfile
+    include_tasks: save_log.yml

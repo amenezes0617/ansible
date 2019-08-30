@@ -1,0 +1,18 @@
+
+The monthly patching process has completed for server {{ inventory_hostname }}.
+{% if yum_output.results|length > 0 %}
+The following packages were updated:
+
+{{ yum_output.results|length }}
+
+{% else %}
+There were no missing updates at this time.
+{% endif %}
+{% if rebooted is defined %}
+The server was rebooted.
+{% else %}
+The server was not rebooted.
+{% endif %}
+
+Note:
+The server will only be rebooted when the kernel has been updated or when java has been updated.

@@ -1,0 +1,9 @@
+---
+  - name: Send email before patching
+    mail:
+      host: mail.example.com
+      port: 25
+      to: "{{ recipient_email }}"
+      subject: "System updates for the service {{ service|upper }} is starting"
+      body: "{{ lookup('template', 'templates/mail_body_before.j2') }}"
+      from: example@example.com

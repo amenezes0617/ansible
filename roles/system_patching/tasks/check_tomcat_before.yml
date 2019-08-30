@@ -1,0 +1,11 @@
+---
+# Check if Tomcat is running
+    - name: Check if Tomcat is running
+      shell: ps aux | grep [t]omcat | wc | awk '{print$1}'
+      register: tomcat_before
+      changed_when: False
+      ignore_errors: true
+
+    - name: Tomcat running instances
+      debug:
+        msg: "There are {{ tomcat_before.stdout }} instances of Tomcat running"

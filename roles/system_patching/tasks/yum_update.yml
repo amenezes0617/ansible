@@ -1,0 +1,26 @@
+---
+  - name: Remove excludes line in yum.conf
+    lineinfile:
+      path: /etc/yum.conf
+      state: absent
+      regexp: '^exclude'
+
+  - name: Get list of packages to update
+    yum:
+      list: updates
+    register: yum_output
+
+  - name: List number of available packages
+    debug:
+      msg: "{{ inventory_hostname }} has {{ yum_output.results|length }} available updates"
+
+  - name: Message when no updates are needed
+    debug:
+      msg: "No updates are needed at this time"
+    when: yum_output.results|length == 0
+
+  - name: Update all packages
+    yum:
+      name: '*'
+      state: latest
+    when: yum_output.results|length > 0

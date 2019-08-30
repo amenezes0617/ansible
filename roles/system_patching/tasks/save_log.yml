@@ -1,0 +1,12 @@
+---
+  - name: Write logfile
+    template:
+      src: system_patching.j2
+      dest: '/tmp/{{ ansible_fqdn }}-{{ ansible_date_time.date }}.txt'
+
+  - name: Copy logs to Tower server
+    fetch:
+      src: '/tmp/{{ ansible_fqdn }}-{{ ansible_date_time.date }}.txt'
+      dest: /Patching_Logs/
+      fail_on_missing: no
+      flat: yes

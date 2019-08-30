@@ -1,0 +1,7 @@
+---
+  - name: Verify all previously running services are running after update (runs only if system updated or rebooted)
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items: "{{ service_status_before.stdout_lines }}"

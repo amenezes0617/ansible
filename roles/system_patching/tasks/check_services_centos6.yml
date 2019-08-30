@@ -1,0 +1,17 @@
+---
+  - name: Get services running after update (centos6)
+    shell: service --status-all | grep "is running" | awk '{print $1}'
+    register: service_status_after
+    changed_when: False
+    args:
+      warn: False
+
+  - name: List running services
+    debug:
+      msg: "{{ service_status_after.stdout }}"
+
+  - name: Verify all previously running services are running after update (runs only if system updated or rebooted)
+    debug:
+      msg: "{{ item }} was running before and is running now"
+    with_items: "{{ service_status_after.stdout_lines }}"
+    when: item in service_status_before.stdout
