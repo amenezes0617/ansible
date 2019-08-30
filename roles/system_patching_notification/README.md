@@ -9,6 +9,7 @@ If that is not found, the email will go to Aline Menezes so that can be correcte
 Role Variables
 --------------
 This role uses local facts. Each server should have a local fact file located at /etc/ansible/facts.d/preferences.fact The service name and notification_email will be used for notifications.
+When used in Tower, it will use the fact caching feature to speed up variable search.
 
 This role is called by the system_patching_notification.yml playbook.
 
